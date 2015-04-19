@@ -46,7 +46,7 @@ library(ggplot2) #  ggplot2 for plotting figures
 ## package 'data.table' successfully unpacked and MD5 sums checked
 ## 
 ## The downloaded binary packages are in
-## 	C:\Users\pdhingra\AppData\Local\Temp\RtmpUTBqtY\downloaded_packages
+## 	C:\Users\pdhingra\AppData\Local\Temp\RtmpcROoYc\downloaded_packages
 ```
 
 
@@ -171,7 +171,7 @@ ggplot(steps_per_interval, aes(x=interval, y=steps)) +
         theme_bw()
 ```
 
-![](./PA1_template_files/figure-html/plot_time_series-1.png) 
+![](./PA1_template_files/figure-html/plot_time_series_graph-1.png) 
 
 
 2. find the 5-minute interval with the containing the maximum number of steps:
@@ -277,7 +277,7 @@ ggplot(fill_steps_per_day, aes(x = steps)) +
              x = "Number of Steps per Day", y = "Number of times in a day(Count)") + theme_bw() 
 ```
 
-![](./PA1_template_files/figure-html/histo_fill-1.png) 
+![](./PA1_template_files/figure-html/histo_fill_value-1.png) 
 
 
 

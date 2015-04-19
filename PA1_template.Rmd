@@ -31,7 +31,7 @@ opts_chunk$set(echo = TRUE, results = 'hold')
 ```
 
 ### Load  libraries. Use install.packages if package is not installed.
-```{r call_libraries}
+```{r libraries}
 install.packages("data.table")
 library(data.table)
 library(ggplot2) #  ggplot2 for plotting figures
@@ -54,7 +54,7 @@ Show any code that is needed to:
 
 **Note**: It is assumed that the file activity.csv is in the current working directory.  Dataset is available here: [Activity monitoring data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) [52K]
 
-```{r read_data}
+```{r read_csv}
 activitydata <- read.csv('activity.csv', header = TRUE, sep = ",",
                   colClasses=c("numeric", "character", "numeric"))
 ```
@@ -63,7 +63,7 @@ activitydata <- read.csv('activity.csv', header = TRUE, sep = ",",
 
 convert the **date** field to `Date` class and **interval** field to `Factor` class.
 
-```{r tidy_data}
+```{r convert_data}
 activitydata$date <- as.Date(activitydata$date, format = "%Y-%m-%d")
 activitydata$interval <- as.factor(activitydata$interval)
 ```
@@ -80,7 +80,7 @@ For this part of the assignment, you can ignore the missing values in
 the dataset.
 
 
-```{r pre_calc_stepsperday}
+```{r calc_stepsperday}
 steps_per_day <- aggregate(steps ~ date, activitydata, sum)
 colnames(steps_per_day) <- c("date","steps")
 head(steps_per_day)
@@ -99,7 +99,7 @@ ggplot(steps_per_day, aes(x = steps)) +
 
 2. calculate the ***mean*** and ***median*** of the number of steps taken per day.
 
-```{r meanmedian}
+```{r mean_median}
 steps_mean   <- mean(steps_per_day$steps, na.rm=TRUE)
 steps_median <- median(steps_per_day$steps, na.rm=TRUE)
 ```
@@ -110,7 +110,7 @@ The mean is **`r format(steps_mean,digits = 8)`** and median is **`r format(step
 
 calculate the aggregation of steps by intervals of 5-minutes and convert the intervals as integers and save them in a data frame called `steps_per_interval`.
 
-```{r steps_interval}
+```{r calc_steps_interval}
 steps_per_interval <- aggregate(activitydata$steps, 
                                 by = list(interval = activitydata$interval),
                                 FUN=mean, na.rm=TRUE)
@@ -125,7 +125,7 @@ colnames(steps_per_interval) <- c("interval", "steps")
 1. make the plot with the time series of the average number of steps taken (averaged across all days) versus the 5-minute intervals:
 
 
-```{r plot_time_series}
+```{r plot_time_series_graph}
 ggplot(steps_per_interval, aes(x=interval, y=steps)) +   
         geom_line(color="orange", size=1) +  
         labs(title="Average Daily Activity Pattern", x="Interval", y="Number of steps") +  
@@ -135,7 +135,7 @@ ggplot(steps_per_interval, aes(x=interval, y=steps)) +
 
 2. find the 5-minute interval with the containing the maximum number of steps:
 
-```{r max_interval}
+```{r calc_max_interval}
 max_interval <- steps_per_interval[which.max(  
         steps_per_interval$steps),]
 ```
@@ -158,7 +158,7 @@ bias into some calculations or summaries of the data.
 
 The total number of missing values in steps can be calculated using `is.na()` method to check whether the value is mising or not and then summing the logical vector to get total number of missing values.
 
-```{r tot_na_value}
+```{r calc_tot_na_value}
 
 missing_vals <- sum(is.na(activitydata$steps))
 
@@ -173,7 +173,7 @@ To populate missing values, we choose to replace them with the mean value at the
 
 We create a function `na_fill(data, pervalue)` which the `data` arguement is the `activitydata` data frame and `pervalue` arguement is the `steps_per_interval` data frame.
 
-```{r fill_na}
+```{r fill_na_values}
 na_fill <- function(data, pervalue) {
         na_index <- which(is.na(data$steps))
         na_replace <- unlist(lapply(na_index, FUN=function(idx){
@@ -194,7 +194,7 @@ str(activitydata_fill)
 
 We check that are there any missing values remaining or not
 
-```{r check_empty}
+```{r check_empty_value}
 sum(is.na(activitydata_fill$steps))
 ```
 
@@ -214,7 +214,7 @@ colnames(fill_steps_per_day) <- c("date","steps")
 ### 4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 
-```{r histo_fill}
+```{r histo_fill_value}
 ggplot(fill_steps_per_day, aes(x = steps)) + 
        geom_histogram(fill = "blue", binwidth = 1000) + 
         labs(title="Histogram of Steps Taken per Day", 
@@ -228,7 +228,7 @@ ggplot(fill_steps_per_day, aes(x = steps)) +
 
 
 
-```{r meanmedian_fill}
+```{r mean_median_fill}
 steps_mean_fill   <- mean(fill_steps_per_day$steps, na.rm=TRUE)
 steps_median_fill <- median(fill_steps_per_day$steps, na.rm=TRUE)
 ```
